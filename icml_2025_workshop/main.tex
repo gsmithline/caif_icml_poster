@@ -1,0 +1,951 @@
+%%%%%%%% ICML 2025 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+\usepackage[T1]{fontenc}
+
+% -- ICML 2025 style  ----------------------------------------
+%   • Use   \usepackage{icml2025}  for blind review
+%   • Use   \usepackage[accepted]{icml2025}  for camera-ready
+%\usepackage{icml2025}          % <-- switch to [accepted] when needed
+\usepackage[accepted]{icml2025}
+
+% ------------------------------------------------------------
+% Core figure / table / typography helpers (allowed)
+% ------------------------------------------------------------
+\usepackage{microtype}         % better kerning / spacing
+\usepackage{graphicx}          % figures
+%\usepackage{subfigure}         % sub-figures
+\usepackage{booktabs}          % professional tables
+\usepackage{subcaption}
+\usepackage{float}
+% globally tighten spacing around floats
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}  % between floats and text
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}      % between two floats
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}     % between in-text float and text
+
+% tighten subfigure captions
+\usepackage[font=small,skip=2pt]{caption}
+\captionsetup[subfigure]{aboveskip=2pt,belowskip=2pt}
+\renewcommand{\floatpagefraction}{.8}             % require 80% of a float page
+\renewcommand{\textfraction}{.1}  
+\usepackage{comment}
+
+% ------------------------------------------------------------
+% Math & symbols (ICML-safe)
+% ------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm, mathtools, bm, mathrsfs}
+
+% ------------------------------------------------------------
+% References, links, URLs  -----------------------------------
+\usepackage{natbib}            % loaded *after* icml2025
+% ----------------------------------
+\usepackage{hyperref}       
+\usepackage[capitalize,noabbrev]{cleveref}
+
+
+
+% ------------------------------------------------------------
+% Misc quality-of-life packages (non-conflicting)
+% ------------------------------------------------------------
+\usepackage{xspace}
+\usepackage{adjustbox}         % compact figure/table resizing
+\usepackage{array, tabularx}   % better tables
+\usepackage{placeins}          % \FloatBarrier
+\usepackage{comment}           % block comments
+\usepackage{fvextra}           % nicer verbatim
+
+% ------------------------------------------------------------
+% Theorem environments  --------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ------------------------------------------------------------
+% Custom macros (safe to modify)  ----------------------------
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\newcommand{\se}[2]{\mbox{$#1\!\pm\!#2$}}
+% one number per cell, split over two lines
+
+\usepackage{stfloats}
+\usepackage{rotating}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  basicstyle=\scriptsize\ttfamily,
+  backgroundcolor=\color{gray!10},
+  breaklines=true,
+  columns=fullflexible,
+  literate={×}{{$\times$}}1 {≈}{{$\approx$}}1,
+  escapeinside={*@}{@*}
+}
+
+\hyphenation{Open-AI}
+
+\newcommand{\term}[1]{\textbf{\textit{#1}}}
+\newcommand{\bE}{\mathbb{E}}
+\newcommand{\bI}{\mathbb{I}}
+\newcommand{\playerset}{\mathscr{N}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\btheta}{\boldsymbol\theta}
+\newcommand{\Regret}{\mathit{Reg}}
+\newcommand{\bR}{\bar{R}}
+\newcommand{\sym}{\text{Sym}}
+\newcommand{\lnorm}[1]{\lvert #1\rvert}
+\newcommand{\OFFER}{\textsc{Offer}}
+\newcommand{\ACCEPT}{\textsc{Accept}}
+\newcommand{\WALK}{\textsc{Walk}}
+\newcommand{\bpi}{\boldsymbol{\pi}}
+
+
+\newcommand{\itemtypes}{\Gamma}
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+%\usepackage[disable,textsize=tiny]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Measuring Competition and Cooperation in LLM Bargaining}
+
+\begin{document}
+
+
+\twocolumn[
+\icmltitle{Measuring Competition and Cooperation in LLM Bargaining: An Empirical Meta-Game Analysis
+}
+
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2025
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Gabriel Smithline}{umich}
+\icmlauthor{Chris Mascioli}{umich}
+\icmlauthor{Mithun Chakraborty}{umich}
+\icmlauthor{Michael P. Wellman}{umich}
+\end{icmlauthorlist}
+
+% ---------------- Affiliation ----------------
+\icmlaffiliation{umich}{Computer Science & Engineering, University of Michigan, Ann Arbor, MI, USA}
+
+% ---------------- Correspondence -------------
+\icmlcorrespondingauthor{Gabe Smithline}{gsmithl@umich.edu}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Large Language Models, Empirical Game-Theoretic Analysis, Bargaining, Indivisible Item Allocation}
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+\begin{abstract}
+We conduct an empirical game-theoretic analysis of how large-language models negotiate the division of a set of subjectively valued items.
+% with discounting over negotiation rounds and outside fallback options. 
+The LLM agents represent \textit{meta-strategies}, mapping a prompt describing the bargaining scenario to their implemented strategy for negotiation.
+Analysis of gradations of prompts shows that incremental emphasis of game features can reduce blatant mistakes.
+To evaluate their relative performance, we formulate and estimate an empirical \textit{meta-game} model over the LLM agents.
+We identify equilibria in this game model, and analyze the agents' competitiveness and fairness in the equilibrium context according to measures of regret, welfare, and envy-freeness.
+Uncertainty in these estimates is quantified using a statistical bootstrapping approach.
+Across nine LLM variants plus RL and heuristic baselines, OpenAI models (especially o3-mini) deliver the best individual and social performance, as well as greatest robustness. 
+Introducing a heuristic rigid bargaining strategy exposes systematic vulnerabilities in some LLM agents, underscoring the value of adversarial evaluation.  
+\end{abstract}
+
+%\item \textbf{Benchmark.} A fully-instrumented bargaining suite with bootstrap statistics for max-entropy Nash equilibrium regret, Nash/utilitarian welfare, and EF1 fairness under our extended rules. The benchmark suite will be released under the MIT License \footnote{\url{https://github.com/dipplestix/caif_negotiation/tree/gabe-working-branch}}.
+\section{Introduction}
+
+Large language models (LLMs) are typically evaluated with respect to static benchmarks, where performance can be measured in terms of quality of response to given inputs. 
+For domains with multiple interacting LLM agents, performance inherently depends on the behavior of other agents in the environment.
+The evaluation approach, therefore, must carefully determine consider its assumptions about other-agent context and consider the sensitivity of results to these strategic assumptions.
+
+We undertake an evaluation of LLM agents for a particular strategic domain: sequential bargaining to allocate a set of items. 
+Negotiation provides an appealing challenge problem for multiagent evaluation---a canonical scenario with plausible real-world application, where agents pursue self-interest but can succeed only by finding deals of mutual benefit.
+It is thus a \textit{mixed-motive} domain, simultaneously involving competition over surplus and cooperative concession to reach agreement.
+
+Before one would deploy an AI negotiation agent, one would wish to have confidence that the agent understands the principal's circumstance and objectives, and is effective in reaching beneficial deals.
+From a societal perspective, we have additional acute interests in ensuring that:
+\begin{itemize}
+\item AI negotiators are effective in identifying creative deals for mutual benefit;
+\item interactions between separately trained AI negotiators do not produce unanticipated negative outcomes;
+and
+    \item AI negotiators behave in a transparent and trustworthy manner (e.g., that they do not misrepresent facts or express insincere commitments).
+\end{itemize}
+
+Our investigation utilizes sequential bargaining not simply as a task of intrinsic interest, but as a controlled framework to examine emergent cooperation in contemporary LLMs. 
+We adopt a classic two-agent multi-item bargaining setting employed in various AI studies (e.g., by \citet{Lewis17}).
+Our version includes two key elements:
+\begin{enumerate}
+\item A \term{discount factor}, systematically reducing payoffs over negotiation rounds to incentivize rapid agreement.
+\item An explicit \term{outside option}, allowing agents to opt out of negotiations and receive some value.
+This requires agents to assess whether a mutually beneficial is feasible to obtain.
+\end{enumerate}
+Without discounting or outside options, short-horizon negotiation can degenerate into an ultimatum game.
+
+\iffalse
+These modifications yield three beneficial properties particularly suited to rigorous analysis:
+\begin{itemize}
+\item \textbf{Precise utilities.} Each negotiation outcome maps explicitly to a numerical payoff vector, enabling exact welfare evaluations unattainable with ordinal or stochastic rewards.
+\item \textbf{Ground-truth measures.} Known closed-form optimal solutions, fairness, welfare, and egalitarian measures, provide clear standards for performance assessment.
+\item \textbf{Quantifiable cooperation.} The measurable distance from ideal social outcomes offers a direct metric of cooperative behavior, complementing traditional regret-based analyses.
+\end{itemize}
+\fi
+
+
+
+In addition to formulating the bargaining game benchmark, this work contributes the following:
+\begin{enumerate}
+%\item \textbf{Benchmark.} A fully-instrumented bargaining suite with bootstrap statistics for max-entropy Nash equilibrium regret, Nash/utilitarian welfare, and EF1 fairness under our extended rules. The benchmark suite will be released under the MIT License \footnote{\url{https://github.com/dipplestix/caif_negotiation/tree/gabe-working-branch}}.
+% \item \textbf{Updated bargaining framework.} We extend the \citet{Lewis17} bargaining scenario, incorporating discounting and outside options, along with bootstrap-derived statistics capturing max-entropy Nash equilibrium regret, Nash and utilitarian welfare, and fairness measures (EF1).
+\item \textbf{Empirical meta-game evaluation.}
+We systematically collect results from head-to-head bargaining between agents derived from five proprietary LLMs, reinforcement learning (RL), and heuristic strategies. 
+From this data we estimate an empirical meta-game model that drives the analysis.
+\item \textbf{Prompting hierarchy framework.} We present a structured, seven-level incremental prompting framework to systematically analyze how varying degrees of strategic guidance influence LLM negotiation strategies and effectiveness.
+\item \textbf{Multi-criteria quantitative and qualitative assessment.} 
+We employ diverse metrics that bear on the individual and joint performances as well as strategic relationships among negotiation agents.
+We include individual utility as well as social welfare and fairness indicators, contextualized by game-theoretic analysis.
+% game-theoretic regret-based analysis that gauges the agents' strategic competence with metrics from the literature on the fair and efficient allocation of indivisible items that shed light on emergent cooperation. We also qualitatively analyzed the actions of LLMs and their reported reasoning to uncover interesting (sometimes pathological) behavioral patterns. 
+We find a consistent positive correlation among these metrics across bargaining setups.  
+\item \textbf{Robustness analysis.} 
+We characterize uncertainty in our measurements through statistical bootstrapping, and further probe vulnerabilities to targeted exploitive strategy.
+In particular, we identify vulnerabilities in certain LLM agents to exploitation by an extremely rigid heuristic bargaining strategy.
+% (\textsc{Tough}), (notably Gemini and Claude Sonnet) that remain hidden in standard LLM-only evaluations.
+\end{enumerate}
+% Collectively, these contributions position multi-item bargaining as an empirical tool for diagnosing how modern AI systems manage the interplay between competition and cooperation. 
+
+\section{Background and Related Work}
+
+Bargaining scenarios epitomize mixed-motive strategic interactions, requiring agents to consider their own interests and those of their counterpart. 
+% Such scenarios support well-defined social welfare optima and permit rigorous evaluation using fairness metrics like Nash welfare and envy-freeness up to one item (EF1) \citep{Lipton2004Approximately}. 
+% Consequently, we use bargaining as an analytical framework to assess the interplay of competition and cooperation in modern AI systems.
+Our study investigates a multi-item bargaining scenario, related to a formulation popularized within AI by \citet{Lewis17} and employed subsequently in works by many researchers \citep{cao2018emergent,hua2024game,li2024meta,li25combining,lanctot2019openspiel,he-etal-2018-decoupling,chawla-etal-2023-selfish}. 
+
+In the context of single-agent evaluation,  \citet{jordan2020evaluating} highlight the importance of robust benchmarks for evaluating agent capabilities.
+These are likewise essential in multiagent settings, which also pose additional considerations particular to the strategic interaction.
+Recent ``reevaluations'' \citep{balduzzi2018reevaluating, liu2025reevaluating} underscore the inadequacy of coarse metrics like win rates in capturing nuanced agent behaviors. 
+Work in evaluating cooperation \citep{papoudakis2020benchmarking,sinha2019incentivizing}  emphasizes the need for welfare-centric evaluations.
+
+Outcomes in multiagent environments inherently depend on the joint behavior of all agents. 
+A particular agent's performance, therefore, hinges on which agents it plays against: the \term{strategic context}.
+\citet{balduzzi2018reevaluating} argue that the most relevant strategic contexts are where other agents are approximately rational, and advocate evaluation with respect to a game-theoretic equilibrium, which they term \term{Nash-averaging}.
+This is equivalent to the concept of \term{NE-regret}, employed by \citet{jordan2007empirical} to evaluate agents in a research competition.
+
+\citet{li2024meta} introduce a meta-game evaluation approach, which uses empirical game-theoretic analysis (EGTA) \citep{Wellman25tg} to construct a game model over agent meta-strategies based on simulation data.
+This work employs statistical bootstrapping techniques \citep{davison1997bootstrap} to provide distributional assessments of game-theoretic properties \citep{wiedenbeck2014bootstrap}.
+
+The advent of GPT-class LLMs has prompted large-scale evaluations in competitive and cooperative games. 
+Empirical probes reveal emergent strategic reasoning \citep{chen2023money,fan2024can,duan2024gtbench} and diverse behavioral patterns cataloged in \textsc{AgentBench} \citep{liu2024agentbench}.
+
+\citet{hua2024game} study LLM bargaining in a setup similar to that considered here, focusing on the engineering of prompts to specify a workflow for decision making. 
+They likewise evaluate outcomes based on welfare and fairness metrics, which in this case arise from the specified strategy as implemented through the LLM.
+\citet{abdelnabi2024negotiation} propose a broader negotiation benchmark demanding a variety of agent skills. 
+% Though performance-centric, these works initiate discussions on efficiency, fairness, and welfare—topics we systematically explore further.
+
+Parallel social science research employs LLMs to simulate human-like participants, identifying biases and interaction heuristics \citep{horton2023large,argyle2023out,aher2023using}. 
+These findings emphasize the need to audit LLM interactions beyond competitiveness, incorporating fairness and welfare considerations.
+
+Emergent cooperation among multiagent LLM systems has also been explored, for instance by \citet{piatti2024cooperate} through societal simulations. 
+
+% Nevertheless, systematic integration of theoretical fairness and welfare constructs into LLM evaluation remains limited relative to other evaluation domains. 
+% Our study measures these concepts, leveraging cardinal utilities, observable outcomes, and controllable outside options, thus enabling robust evaluation of both agent performance and broader societal implications.
+
+\section{Technical Preliminaries}
+%\section{Bargaining Game and Game Theory Preliminaries}
+\label{sec:game-framework} 
+
+
+%We refer to the agents as player~1 and player~2, with player~1 taking the first action in each \term{round}.
+
+\paragraph{Bargaining scenario.} 
+The task on which we evaluate our agentified LLMs is an alternating-offer multi-item bargaining scenario between two agents, termed player~1 and player~2.
+We have a fixed number $T$ of distinct item types $\itemtypes=\{1,\dots,T\}$ with $q_t$ items of type $t \in \itemtypes$. 
+At the start of each bargaining instance, we independently sample, for each $t \in \itemtypes$, $q_t \sim \text{Poisson}(\lambda)$, defining a quantity vector $q = (q_1,\dots,q_T)$. %$\in \mathbb{Z}_{>0}^T$; 
+For each player~$i\in\{1,2\}$, we independently draw $v_{i,t}\sim U(\{1,\dots,V\})$ for every $t\in\itemtypes$, defining a \term{private valuation} vector $v_i = (v_{i,1},\dots,v_{i,T})$, as well as an \term{outside-option value} $w_i \sim U(\{1,\dots,v_i\cdot q\})$.
+% The parameters $\lambda, V$ are positive integers. 
+%which the player obtains if negotiation fails. 
+Each agent observes its own valuation and outside option, but not the other's. 
+An \term{allocation} $a=(a_1,a_2)\in \mathbb{Z}_{\ge0}^{T}\times \mathbb{Z}_{\ge0}^{T}$ represents a partition of the set of items into \term{bundles} assigned to the agents: $a_1+a_2=q$. 
+
+Negotiation unfolds over a maximum of $R$ \textit{rounds}, with player~1 taking the first action in each round. 
+% In each round, agent 1 proposes first, followed by agent 2. 
+On its turn, each player may choose to make an \OFFER\ in the form of an allocation, \ACCEPT\ the latest offer from the other, or \WALK\ away. 
+The game ends upon an \ACCEPT\ or \WALK\ action, or after $R$ rounds; a final-round (counter)offer by player~2 is thus equivalent to \WALK. 
+\ACCEPT\ results in an allocation $a$ corresponding to the accepted offer, valued by player~$i$ at $v_i \cdot a_i$.
+Otherwise negotiation fails, and player $i$ obtains its outside-option value $w_i$. 
+Values are geometrically discounted over rounds at a rate $\gamma \in (0,1)$, so that if the game ends in round $r$, each agent's payoff is the value of its outcome times the factor~$\gamma^{r-1}$.
+
+% We will now introduce game-theoretic terminology adapted to our meta-game framework.
+
+\paragraph{Strategies and utilities.} 
+%On its turn, the agent selects from its set of available actions. 
+%A \term{pure strategy} $\pi_i \in \Pi_i$ specifies a deterministic action for every possible state where agent~$i$ makes a decision. 
+Let $-i$ denote the agent other than player~$i\in\{1,2\}$. A \term{pure strategy} \(\pi_i\in\Pi_i\) is a policy that assigns to player~\(i\) a possibly stochastic choice over its available actions at each decision point (i.e., its turn in a round).
+A pure strategy in our framework is implemented by an LLM, an RL-derived policy, or a hand-crafted heuristic, some of which produce stochastic outputs (Section~\ref{sec:agent_strat}). 
+A \term{mixed strategy} $\sigma_i \in \Delta(\Pi_i)$ is a probability distribution over pure strategies.
+Player~$i$'s \term{utility} for playing $\pi_i$ against other-player strategy $\pi_{-i}$ is given by $u_i(\pi_i,\pi_{-i})$.
+This utility is an expectation of realized payoffs with respect to the instance-specific item, valuation, and outside-option draws, as well as stochasticity of actions induced by the strategy.
+For a mixed-strategy \term{profile} $\sigma = (\sigma_i, \sigma_{-i})$, player~$i$'s utility is defined as $u_i(\sigma) = \mathbb{E}_{\pi \sim \sigma}[u_i(\pi)]$.
+
+\paragraph{Regret and equilibrium.} 
+Player~$i$'s \term{regret} in profile~$\sigma$ is its maximum possible gain from unilateral deviation:
+$\Regret_i(\sigma) = \max_{\pi_i' \in \Pi_i} u_i(\pi_i', \sigma_{-i}) - u_i(\sigma)$.
+Strategy profile~$\sigma^*$ is a \term{Nash equilibrium} (NE) if no player can profitably deviate: $\Regret_1(\sigma^*) = \Regret_2(\sigma^*) =0$.
+
+For games with multiple NE, we focus on the \term{maximum-entropy Nash equilibrium} (MENE), defined as the NE $\sigma^*$ that maximizes Shannon entropy $-\sigma^* \cdot \ln (\sigma^*)$. 
+We approximate MENE using the mixed-integer linear programming approach of \citet{li2024meta} (with a tolerance of $10^{-6}$).
+
+ 
+While regret helps us gauge outcomes from each agent's selfish-rational perspective, we use the following metrics to assess social desirability.
+
+\paragraph{Welfare and fairness metrics.} 
+For each outcome, we compute two social welfare measures: the \term{utilitarian welfare} (UW) and the \term{Nash welfare} (NW) which are the sum and the geometric mean of the agents' realized values respectively; maximizing the latter is known to balance efficiency with fairness \citep{Caragiannis2019Unreasonable}.
+%We also consider a fairness metric, \emph{EF1 frequency}, the proportion of allocations that are envy-free up to one item, that is, $ v_i(a_j)-v_i(a_i)\le\max_{\theta\in a_j}v_i({\theta}) $ for every ordered pair of agents $(i,j)$ \citep{Lipton2004Approximately}.
+
+We also assess fairness of negotiation outcomes using the envy-based paradigm.
+An allocation is \term{envy-free} if each agent's valuation of its own allocated bundle is not lower than its valuation of every other agent's bundle. 
+Since an envy-free allocation does not exist in general for indivisible items, we employ a relaxation which always exists: \term{envy-freeness up to one item} (EF1) \citep{Lipton2004Approximately,Budish11}. 
+An allocation is EF1 if, for every agent $i$, there is an item in other-agent $-i$'s bundle which, if hypothetically removed, would make $i$ value its own bundle at least as much as $-i$'s diminished bundle. 
+For our setting with additive valuations, this reduces to the condition $ v_i \cdot a_{-i} -v_i \cdot a_i\le\max_{k:a_{-i,k > 0}}v_{i,k}$ for $i\in\{1,2\}$. %Any envy that agent $1$ might feel toward $1$'s bundle can be eliminated by removing at most one item from $2$'s bundle. 
+We then define \term{EF1 frequency} as the fraction of all  bargaining instances ending in \ACCEPT\ that produce EF1 allocations. %(instances that end in \WALK\ are excluded as there is no allocation to assess fairness). 
+
+\paragraph{Empirical meta-game analysis.}
+Our evaluation methodology follows the empirical meta-game analysis approach of \citet{li2024meta}.
+We simulate all combinations of a set of negotiation agents in various game settings, and assemble the data in an empirical game model \citep{Wellman25tg}.
+We simulate each agent in the roles of player~1 and player~2, and define a symmetric version of the game where the agents are randomized into these roles.
+From the game model, we derive empirical equilibria, and employ these equilibria as strategic contexts for evaluation of the slate of agents.
+
+So that our context is uniquely defined, we focus on MENE in particular, and measure each agent's characteristics in terms of its performance against the MENE profile. 
+This includes regret metrics as well as welfare and fairness properties as described above.
+To quantify uncertainty (e.g., standard errors), we take a bootstrapping approach, where the empirical game model is resampled and all measures are recalculated.
+That is, for each game sample, we compute an associated MENE profile and calculate the performance measures with respect to that MENE opponent mixture.
+
+\section{Agent Strategies}\label{sec:agent_strat}
+%To evaluate diverse negotiation approaches, 
+We tested agents employing three categories of strategies in our bargaining scenario: large language models (LLMs), heuristic strategies, and reinforcement learning algorithms.
+
+\subsection{Large Language Models}
+We selected the following five LLMs from different companies to cover a broad spectrum of capabilities in our bargaining experiments, leaving model parameters such as temperature at their default setting:
+%Parameters like temperature were not adjusted for any LLM agent. \textbf{OpenAI models:} \textbf{Anthropic models.} \textbf{Google models.} 
+\begin{itemize}
+    \item \textbf{GPT-4o},  OpenAI’s flagship multimodal model \citep{openai2024gpt4o}, and \textbf{o3-mini}, its reasoning-oriented variant \citep{openai2025o3};\footnote{openai/gpt-4o-2024-08-06, openai/o3-mini-2025-01-31} %openai/gpt-4o-2024-08-06; (\texttt{openai/o3-mini-2025-01-31})
+    \item \textbf{Claude Sonnet 3.7} from Anthropic in both \textbf{standard} and \textbf{reasoning} modes \citep{anthropic2024claude3};\footnote{anthropic/claude-sonnet-3.7-2025-02-19} %(\texttt{anthropic/claude-sonnet-3.7-2025-02-19})
+    \item \textbf{Gemini 2.0 Flash},  Google’s lightweight baseline \citep{anil2023gemini}.\footnote{google/gemini-flash-2.0-2024-12-15} %(\texttt{google/gemini-flash-2.0-2024-12-15})
+\end{itemize}
+  
+
+
+
+\paragraph{Prompting circles (0–6).}
+We organize our bargaining prompts into seven nested levels---called
+“circles”---each adding a layer of strategic guidance.  
+Appendix~\ref{app:mistakes} shows that certain moves in our game are
+\term{mistakes} strictly worse than another available
+action.  
+We crafted our prompt hierarchy to provide high-level guidance and circumvent 
+those mistakes, not to script optimal play; our objective is to
+evaluate the models’ inherent  competence in mixed-motive settings, and not design workflows incorporating these models tailored to the specific task in this paper. See Appendix~\ref{app:prompting} for full descriptions of the circles.
+
+\begin{itemize}
+  \item \textbf{Circle 0}: bare rules: items, private valuations, outside options, available actions.
+  \item \textbf{Circle 1}: add the objective: maximize your own realized valuation at the negotiation outcome, considering your outside option. %payoff versus the outside option.
+  \item \textbf{Circle 2}: show a worked numeric comparison before counteroffering.
+  \item \textbf{Circle 3}: prescribe a step-by-step routine: assess, compare, then accept, walk, or propose.
+  \item \textbf{Circle 4}: list five common mistakes (e.g., accepting worse-than-fallback offers).
+  \item \textbf{Circle 5}: supply quick numeric checks that guard against those mistakes.
+  \item \textbf{Circle 6}: encourage the agent to consider its opponent’s valuation from their offers and adjust.
+\end{itemize}
+
+
+We evaluated each LLM–circle pairing to be employed as a strategy in our meta-game framework on the five \term{mistakes} defined in Appendix~\ref{app:mistakes}, choosing for each model the  circles that suppressed mistakes.
+
+We adopt the following naming convention for our LLM-circle pairings: \texttt{<LLM>-c-<k>}, where \texttt{<LLM>} is the model identifier (\texttt{sonnet-3.7}, for Anthropic Claude 3.7 “Sonnet”, \texttt{sonnet-3.7-r}, for Anthropic Claude 3.7 “Sonnet Reasoning”, \texttt{4o} for GPT-4o, \texttt{o3-mini} for OpenAI o3-mini, \texttt{gem-2.0-f} for Gemini 2.0 Flash); \texttt{c} stands for "circle"; and \texttt{<k>} indexes which circle was applied.
+%Thus, for instance, \texttt{sonnet-3.7-c-5} is Claude Sonnet 3.7 with the prompt for circle 5. 
+
+\subsection{Heuristic Strategies}
+To create clear behavioral baselines and explore boundary conditions, we implemented two rule-based heuristic strategies:
+
+\textbf{Tough Agent}: This heuristic implements an extreme strategy by consistently offering only one of its least-valued item in every counteroffer and never revising its position, testing other agents' responses to highly rigid unfavorable negotiation stances.
+
+\textbf{Soft Agent}: Representing the opposite extreme, this agent unconditionally accepts any offer received. 
+When forced to propose, it randomly generates offers without strategic intent.
+
+These heuristic agents serve as benchmarks at opposite extremes of the negotiation spectrum.
+
+\subsection{Reinforcement Learning}
+
+As a learning-based baseline, we implemented \term{Neural Fictitious Self-Play} (NFSP) \citep{heinrich2016deep}, which combines fictitious play in extensive-form games \citep{heinrich2015fictitious} with neural-network-based function approximation.
+NFSP maintains two distinct policies:
+\begin{itemize}
+  \item A \textbf{best-response policy}, trained off-policy via Deep Q-Network (DQN) \citep{mnih2013playing} to exploit the current empirical average behavior of its opponents
+  \item An \textbf{average policy}, derived through reservoir sampling \citep{vitter1985random} of the agent’s historical actions, which approximates equilibrium play.
+\end{itemize}
+In our experiments, we utilize the average policy.
+
+Although NFSP is theoretically well suited for multiagent equilibrium learning, the complexity of our five-item bargaining game, with stochastic outside options, exhibits a state-action space substantially larger than the poker domains where NFSP was initially validated. 
+Consequently, the NFSP policy employed in this study is not optimal due to computational limits.
+
+
+\section{Experimental Setup}
+In our experiments, we set our parameters as follows: $T=5$, $\lambda=4$, $V=100$, $\gamma \in \{0.90,0.98\}$, and $R \in \{3,5\}$. In total, we simulated 35,785 bargaining game instances across three settings of the bargaining game (BG):
+\begin{itemize}
+    \item BG1 ($\gamma=0.90$, $R=3$): 14,995 runs (41.9\%)
+    \item BG2 ($\gamma=0.98$, $R=3$): 10,046 runs (28.1\%)
+    \item BG3 ($\gamma=0.98$, $R=5$): 10,744 runs (30.0\%) 
+\end{itemize}
+ 
+BG0 is a mix over all the games, forming a meta-game over our three underlying games. To ensure that no empirical game receives disproportionate influence, we bootstrap each cell separately within BG1-BG3 and then average the resulting means with equal $\frac{1}{3}$ weights.
+%For each of the 1,000 bootstrap samples, we construct an empirical game, compute the corresponding MENE, and record (i) MENE regret, (ii) normalized NW, (iii) the percentage of maximum attainable UW, and (iv) EF1 frequency per agent. 
+%See Tables \ref{tab:bg_all_llm_only} and~\ref{tab:bg_all_merged} for results.
+
+\section{LLM-Only Bargaining Games}
+\label{sec:llm-only-games}
+\begin{table*}[!b]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength\tabcolsep{2pt}
+\begin{tabular}{%
+  l|*{4}{c}|*{4}{c}
+}
+\toprule
+\textbf{Agent}
+  & \multicolumn{4}{c|}{BG1 ($\gamma=0.9,R=3$)}
+  & \multicolumn{4}{c}{BG2 ($\gamma=0.98,R=3$)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+  & MENE Regret & NW\% & UW \% & EF1 \%
+  & MENE Regret & NW\% & UW \% & EF1 \% \\
+\midrule
+\textbf{sonnet-3.7-c-5}
+  & \se{34.95}{0.76} & \se{89.19}{0.08} & {\boldmath\se{86.89}{0.07}} & \se{33.85}{0.17}
+  & \se{37.11}{0.86} & \se{87.67}{0.07} & \se{85.68}{0.06}        & \se{35.35}{0.12} \\
+
+\textbf{sonnet-3.7-c-6}
+  & \se{20.77}{0.62} & \se{90.93}{0.08} & {\boldmath\se{87.79}{0.06}} & \se{33.05}{0.19}
+  & \se{17.71}{0.63} & {\boldmath\se{90.93}{0.08}} & {\boldmath\se{86.05}{0.07}} & \se{36.83}{0.14} \\
+
+\textbf{sonnet-3.7-r-c-0}
+  & \se{39.79}{0.88} & \se{87.66}{0.07} & \se{84.11}{0.05}           & \se{41.71}{0.15}
+  & {\boldmath\se{15.93}{0.78}} & \se{89.44}{0.08} & \se{85.52}{0.06}     & \se{44.56}{0.14} \\
+
+\textbf{gem-2.0-f-c-2}
+  & \se{38.31}{0.89} & \se{84.76}{0.07} & \se{82.47}{0.06}           & \se{34.79}{0.17}
+  & \se{28.71}{0.82} & \se{85.28}{0.08} & \se{82.96}{0.06}           & \se{33.64}{0.19} \\
+
+\textbf{gem-2.0-f-c-5}
+  & \se{48.90}{0.71} & \se{84.01}{0.10} & \se{84.01}{0.06}           & \se{26.81}{0.23}
+  & \se{29.01}{0.85} & \se{83.74}{0.10} & \se{84.71}{0.07}           & \se{33.01}{0.27} \\
+
+\textbf{4o-c-4}
+  & {\boldmath\se{13.27}{0.56}} & {\boldmath\se{91.97}{0.08}} & \se{86.62}{0.06} & {\boldmath\se{37.88}{0.20}}
+  & {\boldmath\se{13.27}{0.56}}            & {\boldmath\se{90.42}{0.08}} & {\boldmath\se{85.72}{0.07}} & {\boldmath\se{41.80}{0.17}} \\
+
+\textbf{4o-c-5}
+  & {\boldmath\se{6.05}{0.40}}  & {\boldmath\se{93.00}{0.08}} & {\boldmath\se{88.14}{0.06}} & {\boldmath\se{37.38}{0.21}}
+  & {\boldmath\se{9.37}{0.57}}  & {\boldmath\se{90.46}{0.08}} & {\boldmath\se{85.87}{0.06}} & {\boldmath\se{40.54}{0.16}} \\
+
+\textbf{4o-c-6}
+  & {\boldmath\se{20.49}{0.67}} & {\boldmath\se{92.83}{0.07}} & {\boldmath\se{87.66}{0.05}} & {\boldmath\se{38.86}{0.26}}
+  & \se{18.49}{0.74}            & \se{89.33}{0.06}            & \se{85.38}{0.05}            & {\boldmath\se{38.38}{0.15}} \\
+
+\textbf{o3-mini-c-0}
+  & {\boldmath\se{4.68}{0.35}}  & {\boldmath\se{92.48}{0.08}} & \se{86.73}{0.06}           & {\boldmath\se{52.20}{0.19}}
+  & {\boldmath\se{2.73}{0.33}}  & {\boldmath\se{91.87}{0.06}} & {\boldmath\se{86.95}{0.05}} & {\boldmath\se{54.05}{0.17}} \\
+
+\midrule
+\addlinespace
+
+\textbf{Agent}
+  & \multicolumn{4}{c|}{BG3 ($\gamma=0.98,R=5$)}
+  & \multicolumn{4}{c}{BG0 (meta-game over BG1-BG3)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+  & MENE Regret & NW\% & UW \% & EF1 \%
+  & MENE Regret & NW\% & UW \% & EF1 \% \\
+\midrule
+
+\textbf{sonnet-3.7-c-5}
+  & \se{25.83}{0.93} & \se{84.91}{0.09} & \se{84.76}{0.07} & \se{35.24}{0.20}
+  & \se{33.24}{0.77} & \se{87.95}{0.05} & {\boldmath\se{85.87}{0.05}} & \se{36.35}{0.13} \\
+
+\textbf{sonnet-3.7-c-6}
+  & \se{29.57}{0.85} & \se{86.60}{0.13} & {\boldmath\se{85.88}{0.08}} & \se{32.24}{0.21}
+  & \se{23.37}{0.49} & \se{89.61}{0.09} & {\boldmath\se{86.99}{0.06}} & \se{36.29}{0.18} \\
+
+\textbf{sonnet-3.7-r-c-0}
+  & {\boldmath\se{13.71}{0.70}} & {\boldmath\se{90.61}{0.10}} & {\boldmath\se{86.74}{0.07}} & \se{43.34}{0.17}
+  & {\boldmath\se{20.39}{0.61}} & \se{89.80}{0.05} & \se{85.58}{0.04} & {\boldmath\se{43.86}{0.14}} \\
+
+\textbf{gem-2.0-f-c-2}
+  & \se{41.49}{1.36} & \se{85.33}{0.15} & \se{82.56}{0.10} & \se{25.04}{0.21}
+  & \se{33.61}{0.73} & \se{85.94}{0.10} & \se{82.65}{0.07} & \se{32.68}{0.16} \\
+
+\textbf{gem-2.0-f-c-5}
+  & \se{55.44}{1.32} & \se{81.12}{0.20} & \se{81.99}{0.13} & \se{34.52}{0.43}
+  & \se{42.62}{0.69} & \se{85.66}{0.10} & \se{84.42}{0.07} & \se{35.80}{0.35} \\
+
+\textbf{4o-c-4}
+  & \se{25.59}{0.83} & {\boldmath\se{88.79}{0.07}} & \se{83.81}{0.06} & {\boldmath\se{41.53}{0.18}}
+  & \se{20.65}{0.51} & {\boldmath\se{90.77}{0.06}} & \se{85.53}{0.05} & {\boldmath\se{41.59}{0.19}} \\
+
+\textbf{4o-c-5}
+  & {\boldmath\se{22.69}{0.84}} & {\boldmath\se{88.92}{0.14}} & {\boldmath\se{85.10}{0.10}} & {\boldmath\se{37.37}{0.21}}
+  & {\boldmath\se{7.33}{0.36}}  & {\boldmath\se{91.99}{0.07}} & {\boldmath\se{87.08}{0.05}} & \se{39.62}{0.20}\ \\
+
+\textbf{4o-c-6}
+  & {\boldmath\se{7.69}{0.56}} & \se{88.66}{0.08} & \se{84.64}{0.06} & {\boldmath\se{38.54}{0.20}}
+  & {\boldmath\se{10.46}{0.49}} & {\boldmath\se{90.43}{0.04}} & \se{85.81}{0.03} & {\boldmath\se{40.70}{0.20}} \\
+
+\textbf{o3-mini-c-0}
+  & {\boldmath\se{4.24}{0.45}}  & {\boldmath\se{92.08}{0.11}} & {\boldmath\se{87.28}{0.09}} & {\boldmath\se{54.62}{0.25}}
+  & {\boldmath\se{2.12}{0.21}}  & {\boldmath\se{92.37}{0.06}} & {\boldmath\se{87.16}{0.05}} & {\boldmath\se{55.96}{0.21}} \\
+
+\bottomrule
+\end{tabular}
+
+\caption{Aggregate bootstrap means~$\pm$~standard errors for all four BG settings. Within each game and metric, the four best‐performing agents are bolded.}
+\label{tab:bg_all_llm_only}
+\end{table*}
+
+
+We first evaluate head-to-head matchups among nine LLM variants across three distinct bargaining games, characterized by different discount factors ($\gamma$) and round limits ($R$). 
+For each game, we generate 1,000 bootstrap resamples of trajectory data. 
+In every bootstrap instance, we construct an empirical meta-game and compute its corresponding MENE.
+
+Each agent's performance is assessed relative to this MENE across four key metrics:
+
+\begin{enumerate}
+\item Regret with respect to the MENE
+\item Normalized Nash welfare
+\item Normalized utilitarian welfare
+\item Frequency of EF1 (envy-free up to one item) allocations.
+\end{enumerate}
+
+To compute the normalization constants for the welfare functions, we generated millions of game instances. 
+For each game instance, we calculated its maximum possible Nash and utilitarian welfare over all possible outcomes (including falling back on outside options). 
+We then used the average of the maxima of each welfare function over all instances as the corresponding normalization constant in our bootstrap analysis. 
+
+This bootstrap approach generates distributions of equilibrium-adjusted outcomes rather than single-point estimates, enabling robust and context-rich agent comparisons within the broader strategic environment.
+
+Aggregate results are presented in Table \ref{tab:bg_all_llm_only}, while Fig.~\ref{fig:llm_br_123} and Fig.~\ref{fig:bg0_br} illustrate the corresponding average best-response (BR) graphs.
+
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_only/avg_br_graph_gm_1_llm_only.png}
+    \caption{BG1 ($\gamma=0.90$, $R=3$)}
+    \label{fig:bg1_br}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_only/avg_br_graph_gm_2_llm_only.png}
+    \caption{BG2 ($\gamma=0.98$, $R=3$)}
+    \label{fig:bg2_br}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_only/avg_br_graph_gm_3_llm_only.png}
+    \caption{BG3 ($\gamma=0.98$, $R=5$)}
+    \label{fig:bg3_br}
+  \end{subfigure}
+
+  \caption{Reading the average best‐response graphs. Nodes (cyan circles) represent individual agent strategies. A directed arrow from A to B indicates that B is a best response to A with empirical frequency $p\ge0.01$. Arrow color intensity and line width both scale with $p$—darker and thicker arrows denote stronger responses. Line style encodes response strength: dotted for $0.01\le p\le0.33$, dashed for $0.33<p\le0.66$, and solid for $p>0.66$}
+  \label{fig:llm_br_123}
+\end{figure*}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_only/avg_br_graph_gm_full_llm_only.png}
+  \caption{Average best‐response graph for BG0 (meta-game over BG1-BG3). 
+    Same styling conventions as Fig.~\ref{fig:llm_br_123}.}
+  \label{fig:bg0_br}
+\end{figure}
+
+\subsection{Empirical Results}
+\label{sec:llm-empirical-results}
+
+\textbf{OpenAI Models Performance.}
+\texttt{o3-mini-c-0} consistently achieves the lowest MENE regret (2–5) across all games, while \texttt{4o} variants form the next-best group (regret 7–26). These models also achieve the highest normalized Nash welfare (90–93\%) and high EF1 frequencies, demonstrating strong alignment between equilibrium-seeking and welfare fairness.
+
+\textbf{Regret-Welfare Relationship.}
+Agents with regret below 10 consistently induce normalized Nash welfare above 89\% and rank in the top quartile for EF1 frequency across all bargaining games.
+
+%\textbf{Gemini: Fair but Exploitable.}
+%\texttt{gemini-2.0-f-c-2} achieves high EF1 frequency but elevated regret (above 29) and lower welfare scores. Average best-response graphs reveal vulnerability, with many strong counter-strategies targeting Gemini. 
+
+\textbf{Anthropic Sonnet: Horizon-Dependent Performance.}
+The reasoning-enhanced \texttt{sonnet-3.7-r-c-0} improves dramatically from regret 39.14 (BG1) to 12.36 (BG3), while the non-reasoning variant shows opposite trends. Longer horizons favor reasoning capabilities.
+
+\subsection{Behavioral Analysis}
+\label{sec:llm-only-games-qual-findings}
+
+\textbf{Strategic Patterns.}
+Few edges surpass the solidity threshold, indicating broad MENE mixing. However, \texttt{o3-mini-c-0} consistently attracts numerous incoming edges with minimal outgoing ones, highlighting its bargaining strength and low regret.
+
+\textbf{Negotiation Strategies.}  
+OpenAI's \texttt{o3-mini-c-0} adopts strategic opt-out behavior: walking in over 90\% of negotiations when the sum of outside offers exceeds the maximum achievable joint utility from an agreement, but only 10–37\% of the time when agreement would yield higher total welfare. Gemini opens with near-zero proposals, prolonging negotiations and achieving worse outcomes. Anthropic Sonnet balances walking and bargaining behaviors.
+
+\textbf{Parameter Sensitivity.}
+Game parameters critically shape interactions. BG1 ($\gamma=0.90$, $R=3$) yields only dashed relationships, while higher discount factors (BG2: $\gamma=0.98$) and extended rounds (BG3: $R=5$) produce solid best-response edges between specific model pairs.
+
+\subsection{Key Takeaways}
+OpenAI models, particularly \texttt{o3-mini-c-0} and GPT-4o variants, simultaneously achieve low regret, high welfare, and strong fairness. Gemini's tough bargaining remains vulnerable to exploitation, while Anthropic Sonnet's performance varies significantly with prompt modifications. The average best-response graphs confirm \texttt{o3-mini-c-0}'sis a top counter-strategy with persistent best-response relationships emerging between other vendor pairs.
+
+
+\section{LLM \texorpdfstring{$+$}{+} Non-LLM Bargaining Games}
+
+ We augment the nine-agent LLM pool with three baselines—\texttt{nfsp}, \texttt{soft}, and \texttt{tough}. From 1,000 bootstrap resamples of each bargaining game (\textbf{BG1}–\textbf{BG3}), we construct empirical games and a combined meta-game over these instances (\textbf{BG0}), solve for their MENE, and report the four evaluation metrics in Table~\ref{tab:bg_all_merged}.
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_+_non_llm/avg_br_graph_gm_1_llm_and_non_llm.png}
+    \caption{BG1 ($\gamma=0.90$, $R=3$)}
+    \label{fig:bg1_br_non}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_+_non_llm/avg_br_graph_gm_2_llm_and_non_llm.png}
+    \caption{BG2 ($\gamma=0.98$, $R=3$)}
+    \label{fig:bg2_br_non}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_+_non_llm/avg_br_graph_gm_3_llm_and_non_llm.png}
+    \caption{BG3 ($\gamma=0.98$, $R=5$)}
+    \label{fig:bg3_br_non}
+  \end{subfigure}
+
+  \caption{Average best‐response graphs for BG1-–BG3 with mixed LLM and non‐LLM agents. Nodes represent strategies; edges denote empirical best‐response frequency ($p\ge0.01$) with styling conventions as in Fig.~\ref{fig:llm_br_123}.}
+  \label{fig:br_123_llm_nonllm}
+\end{figure*}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{icml_2025_workshop/average_br_graphs/llm_+_non_llm/avg_br_graph_gm_4_llm_and_non_llm_b.png}
+  \caption{Average best‐response graph for meta-game BG0 (mixture over BG1-–BG3) involving LLM and non‐LLM agents. Styling conventions as in Fig.~\ref{fig:llm_br_123}.}
+  \label{fig:bg4_br_non}
+\end{figure}
+
+
+\begin{table*}[!b]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength\tabcolsep{2pt}
+
+\begin{tabular}{l|*{4}{c}|*{4}{c}}
+\toprule
+\textbf{Agent}
+  & \multicolumn{4}{c|}{BG1 ($\gamma=0.9,R=3$)}
+  & \multicolumn{4}{c}{BG2 ($\gamma=0.98,R=3$)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+  & MENE Regret & NW\% & UW \% & EF1 \%
+  & MENE Regret & NW\% & UW \% & EF1 \% \\
+\midrule
+\textbf{sonnet-3.7-c-5}
+  & \se{32.82}{1.05} & \se{88.21}{0.13} & {\boldmath\se{85.45}{0.06}} & \se{32.66}{0.15}
+  & \se{50.22}{1.31} & \se{85.06}{0.17} & \se{84.74}{0.08}           & \se{32.91}{0.18} \\
+
+\textbf{sonnet-3.7-c-6}
+  & \se{20.18}{.99} & \se{89.14}{0.14} & {\boldmath\se{86.47}{0.07}} & \se{32.54}{0.15}
+  & \se{26.12}{1.15} & \se{86.23}{0.17} & {\boldmath\se{85.85}{0.08}} & \se{34.62}{0.19} \\
+
+\textbf{sonnet-3.7-r-c-0}
+  & \se{24.73}{0.79} & \se{87.37}{0.10} & \se{84.98}{0.05}           & {\boldmath\se{39.98}{0.16}}
+  & {\boldmath\se{13.39}{0.72}} & \se{87.51}{0.14} & \se{84.60}{0.08}           & {\boldmath\se{42.68}{0.21}} \\
+
+\textbf{gem-2.0-f-c-2}
+  & \se{34.90}{0.75} & \se{84.15}{0.07} & \se{81.91}{0.06}           & \se{33.95}{0.14}
+  & \se{32.40}{1.01} & \se{83.14}{0.14} & \se{81.91}{0.09}           & \se{30.25}{0.25} \\
+
+\textbf{gem-2.0-f-c-5}
+  & \se{50.70}{0.72} & \se{82.58}{0.12} & \se{82.82}{0.07}           & \se{24.60}{0.18}
+  & \se{30.95}{0.96} & \se{82.20}{0.13} & \se{84.15}{0.07}           & \se{29.54}{0.29} \\
+
+\textbf{4o-c-4}
+  & {\boldmath\se{ 7.93}{0.47}} & {\boldmath\se{90.83}{0.08}} & \se{86.06}{0.06} & \se{ 34.30}{0.20}
+  & \se{20.78}{0.87}            & {\boldmath\se{88.19}{0.14}} & \se{84.22}{0.07} & {\boldmath\se{37.66}{0.24}} \\
+
+\textbf{4o-c-5}
+  & {\boldmath\se{9.37}{0.68}} & {\boldmath\se{90.96}{0.11}} & {\boldmath\se{86.71}{0.06}} & {\boldmath\se{34.58}{0.18}}
+  & {\boldmath\se{10.05}{0.66}} & {\boldmath\se{89.23}{0.11}} & {\boldmath\se{85.35}{0.07}} & {\boldmath\se{37.20}{0.22}} \\
+
+\textbf{4o-c-6}
+  & {\boldmath\se{11.12}{0.59}} & {\boldmath\se{91.00}{0.10}} & {\boldmath\se{86.25}{0.07}} & {\boldmath\se{36.79}{0.20}}
+  & {\boldmath\se{15.50}{0.76}} & {\boldmath\se{88.81}{0.11}} & {\boldmath\se{85.35}{0.09}} & \se{34.39}{0.23} \\
+
+\textbf{o3-mini-c-0}
+  & {\boldmath\se{ 4.82}{0.38}} & {\boldmath\se{90.95}{0.09}} & \se{85.53}{0.06}           & {\boldmath\se{50.81}{0.17}}
+  & {\boldmath\se{ 3.78}{0.44}} & {\boldmath\se{90.47}{0.12}} & {\boldmath\se{85.69}{0.10}} & {\boldmath\se{50.62}{0.26}} \\
+
+\textbf{nfsp}
+  & \se{14.41}{0.71} & \se{83.62}{0.10} & \se{81.09}{0.06}           & \se{32.26}{0.21}
+  & \se{44.81}{0.91} & \se{85.15}{0.14} & \se{83.46}{0.08}           & \se{ 32.16}{0.22} \\
+
+\textbf{soft}
+  & \se{86.20}{1.60} & \se{77.87}{0.22} & \se{75.75}{0.16}           & \se{22.50}{0.32}
+  & \se{42.91}{1.66} & \se{80.60}{0.26} & \se{80.29}{0.16}           & \se{22.86}{0.40} \\
+
+\textbf{tough}
+  & \se{86.22}{1.83} & \se{71.66}{0.21} & \se{79.01}{0.15}           & \se{0.03}{0.01}
+  & \se{68.68}{2.04} & \se{63.48}{0.18} & \se{73.35}{0.14}           & \se{0.00}{0.00} \\
+
+  \textbf{walk}
+ & \se{74.66}{.57} & \se{72.01}{0.00} & \se{72.08}{0.00}           & \se{0.00}{0.00}
+  & \se{95.35}{0.73} & \se{72.01}{0.00} & \se{72.08}{0.00}          & \se{0.00}{0.00} \\
+
+\midrule
+\addlinespace
+
+\textbf{Agent}
+  & \multicolumn{4}{c|}{BG3 ($\gamma=0.98,R=5$)}
+  & \multicolumn{4}{c}{BG0 (meta-game over BG1-BG3)} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+  & MENE Regret & NW\% & UW \% & EF1 \%
+  & MENE Regret & NW\% & UW \% & EF1 \% \\
+\midrule
+
+\textbf{sonnet-3.7-c-5}
+  & \se{53.87}{1.91} & \se{85.06}{0.17} & \se{84.74}{0.07} & \se{32.91}{0.18}
+  & \se{44.18}{1.51} & \se{86.44}{0.21} & \se{85.26}{0.07}           & \se{35.35}{0.22} \\
+
+\textbf{sonnet-3.7-c-6}
+  & \se{68.59}{2.31} & \se{86.23}{0.17} & {\boldmath\se{85.51}{0.08}} & \se{34.62}{0.19}
+  & \se{34.22}{1.59} & \se{88.83}{0.24} & {\boldmath\se{86.54}{0.09}} & \se{36.00}{0.24} \\
+
+\textbf{sonnet-3.7-r-c-0}
+  & {\boldmath\se{26.25}{1.37}} & \se{87.51}{0.14} & \se{84.60}{0.08} & {\boldmath\se{42.68}{0.21}}
+  & \se{23.61}{0.68} & \se{88.50}{0.18} & \se{84.92}{0.07}           & {\boldmath\se{42.88}{0.24}} \\
+
+\textbf{gem-2.0-f-c-2}
+  & \se{59.47}{1.68} & \se{83.14}{0.14} & \se{81.91}{0.09} & \se{30.25}{0.25}
+  & \se{36.81}{0.66} & \se{84.89}{0.13} & \se{81.96}{0.07}           & \se{32.04}{0.20} \\
+
+\textbf{gem-2.0-f-c-5}
+  & \se{70.09}{1.90} & \se{82.20}{0.13} & \se{84.15}{0.07} & \se{29.54}{0.29}
+  & \se{46}{0.92} & \se{84.66}{0.17} & \se{83.94}{0.09}           & \se{35.19}{0.38} \\
+
+\textbf{4o-c-4}
+  & \se{36.95}{0.89} & {\boldmath\se{88.19}{0.14}} & \se{84.22}{0.10} & {\boldmath\se{37.66}{0.24}}
+  & {\boldmath\se{22.96}{0.58}} & {\boldmath\se{90.09}{0.11}} & \se{85.06}{0.07} & {\boldmath\se{40.32}{0.28}} \\
+
+\textbf{4o-c-5}
+  & {\boldmath\se{28.27}{1.28}} & {\boldmath\se{89.23}{0.11}} & {\boldmath\se{85.35}{0.07}} & \se{37.20}{0.29}
+  & {\boldmath\se{ 9.37}{0.52}} & {\boldmath\se{91.34}{0.13}} & {\boldmath\se{86.59}{0.09}} & \se{38.70}{0.27} \\
+
+\textbf{4o-c-6}
+  & {\boldmath\se{16.15}{0.98}} & {\boldmath\se{88.81}{0.11}} & {\boldmath\se{85.35}{0.09}} & {\boldmath\se{34.39}{0.23}}
+  & {\boldmath\se{13.57}{0.66}} & {\boldmath\se{89.92}{0.12}} & {\boldmath\se{85.55}{0.08}} & {\boldmath\se{39.41}{0.28}} \\
+
+\textbf{o3-mini-c-0}
+  & {\boldmath\se{ 3.65}{0.48}} & {\boldmath\se{90.47}{0.12}} & {\boldmath\se{85.69}{0.10}} & {\boldmath\se{50.62}{0.26}}
+  & {\boldmath\se{ 1.58}{0.18}} & {\boldmath\se{91.92}{0.11}} & {\boldmath\se{86.80}{0.09}} & {\boldmath\se{54.58}{0.32}} \\
+
+\textbf{nfsp}
+  & \se{84.24}{1.32} & \se{85.15}{0.14} & \se{83.46}{0.08} & \se{32.16}{0.22}
+  & \se{59.38}{0.71} & \se{82.61}{0.10} & \se{80.83}{0.04}           & \se{29.47}{0.21} \\
+
+\textbf{soft}
+  & \se{38.72}{1.75} & \se{80.60}{0.26} & \se{80.29}{0.16} & \se{22.86}{0.40}
+  & \se{51.51}{1.33} & \se{85.09}{0.30} & \se{82.75}{0.17}           & \se{25.06}{0.35} \\
+
+\textbf{tough}
+  & \se{96.74}{2.38} & \se{63.48}{0.18} & \se{73.55}{0.14}           & \se{0.00}{0.00}
+  & \se{109.95}{1.65} & \se{68.80}{0.19} & \se{73.24}{0.12}          & \se{0.03}{0.01} \\
+
+  \textbf{walk}
+ & \se{104.80}{1.09} & \se{72.01}{0.00} & \se{72.08}{0.00}           & \se{0.00}{0.00}
+  & \se{93.72}{.64} & \se{72.02}{0.00} & \se{72.08}{0.00}          & \se{0.00}{0.00} \\
+\bottomrule
+\end{tabular}
+
+\caption{Aggregate bootstrap means~$\pm$~standard errors for all four BG settings, including non-LLM agents. Within each game and metric, the four best-performing agents are typeset in bold.}
+\label{tab:bg_all_merged}
+\end{table*}
+
+
+\subsection{Empirical Results}
+\label{sec:llm-nonllm-empirical-results}
+
+\texttt{o3-mini-c-0} scores the lowest MENE regret
+(1.63–4.28) and the highest Nash welfare (\(>92\%\) in BG0 and BG3), while the \texttt{4o} variants (\texttt{4o-c-5/6}) occupy the same regret–welfare frontier.
+
+\textbf{Impact of Adversarial Baseline.}
+Across all BGs, \texttt{tough} attracts the
+largest number of incoming edges—often solid—
+meaning it is a best response to many other agents.  Numerically, 6 distinct agents have a relatively high probability \(p>0.33\) with \texttt{tough} as a best response.
+Yet \texttt{tough} itself suffers high regret
+(\(>95\))  robust agents
+(e.g., \texttt{o3-mini}, \texttt{4o-c-4/5/6}) are not exploited by it in turn, keeping its equilibrium payoff low. 
+
+\textbf{OpenAI models are \emph{not} countered by \texttt{tough}.} No solid arrow points \texttt{from} an OpenAI strategy \texttt{into} \texttt{tough}; conversely, \texttt{o3-mini} and \texttt{4o} still receive a fair number of light incoming edges—albeit fewer and thinner than those pointing to \texttt{tough}.
+
+\textbf{Gemini and Sonnet remain exploitable.} \texttt{Gem-2.0-f-c-2/5} and \texttt{sonnet-3.7-\{c-6,r-c-0\}}
+still earn high fairness (EF1) scores but now
+draw solid or dashed edges \emph{into}
+\texttt{tough}, revealing that the adversarial baseline
+is an effective counter-punch to them.
+Their MENE regret therefore sits 3–4× higher
+than that of the OpenAI cohort. 
+
+\textbf{Baselines widen the performance spread.}
+Adding \texttt{nfsp}, \texttt{soft}, and \texttt{tough} expands
+the regret range from and pushes Nash welfare 
+for the worst agents below \(70\%\) in some cases,
+making differences among the LLMs more significant than in the LLM-only pool. 
+
+\textbf{NFSP matters only in BG1.}
+Interestingly, with the short horizon ($\gamma\!=\!0.9, R\!=\!3$) it grabs $\sim$11 \% of the equilibrium, on par with mid-tier OpenAI models.   
+Its share greatly drops in BG2 and BG3.
+
+
+\subsection{Behavioral Analysis}
+\label{sec:llm-only-games-qual-findings}
+The incoming edges
+to \texttt{tough} visually
+confirm its role as exploiting many agents. 
+%\begin{itemize}
+%  \item \textbf{Central counter-strategy.}  The incoming edges
+%        to \texttt{tough} visually
+%        confirms its role as exploiting many agents.
+%  \item \textbf{Cross-vendor diversity still drives strong edges.}
+   %     The thickest solid arrows often run between different
+  %      vendor families (e.g.,
+        %\texttt{sonnet}$\!\rightarr%ow\!$\texttt{tough},
+%        \texttt{gem-c-5}$\!\rightarrow\!$\texttt{tough}),
+%        reinforcing the idea that %possibly engineering diversity %has a stronger influence in most %exploit paths relative to the %prompts used here. 
+%\end{itemize}
+
+\textbf{Sonnet 3.7 Reasoning hallucination vs.\ \texttt{tough}.}
+\texttt{sonnet-3.7-r}, despite being a reasoning model, has \texttt{tough} as a clear best response. Listing~\ref{lst:sonnet_halluc} illustrates this: after correctly recognizing its allocation of \([0,0,1,0,0]\), it hallucinates that it will keep \([6,5,1,4,1]\), inflating its computed value from 201 to 475 and incorrectly choosing \ACCEPT\ . This mistake and ones like it help explain why \texttt{tough} so effectively counters \texttt{sonnet-3.7-r}, highlighting the fragility of even top reasoning models in certain scenarios.
+
+\begin{lstlisting}[
+    caption={Hallucinated reasoning by \texttt{sonnet-3.7-r} in the final
+             round against \textsc{Tough}.  The highlighted line shows the
+             self-contradiction that leads to an acceptance that is a mistake.},
+    label={lst:sonnet_halluc}
+]
+I need to decide whether to accept Player 1's offer, make a counteroffer,
+or walk away. Since this is the final round, if I make a counteroffer it
+will be treated as WALK.
+
+Let me analyze the current offer from Player 1:
+- Player 1 is offering me: [0, 0, 1, 0, 0]   
+- This means I would get 1 unit of item 3 (value 7 per unit)
+- I would keep: [6, 5, 1, 4, 1] of items 1-5  
+
+Value of this offer for me:
+(6 × 8) + (5 × 38) + (1 × 7) + (4 × 53) + (1 × 38) = 495
+With the discount factor (0.98^(3-1) ≈ 0.9604):
+495 × 0.9604 = 475.40
+
+My outside offer value is 201.
+
+Clearly, accepting the offer is significantly better than walking away.
+{"action": "ACCEPT"}
+\end{lstlisting}
+\subsection{Key Takeaways}
+Our results show that some models—especially \texttt{o3-mini-c-0} and the GPT-4o are robust to the \texttt{tough} strategy, while other LLM agents seem to be exploited by it and accept offers from it. Results also further show that OpenAI models still strong in terms of MENE regret and are overwhelmingly performant in terms of welfare and fairness metrics. 
+\section{Conclusion}
+
+We report results from an empirical study of LLM behavior in
+a canonical strategic setting: multi-item bargaining games with discounting and outside
+options.  
+Pairing cardinal utilities with bootstrap meta-games lets us
+analyze welfare and fairness side-by-side, making 
+trade-offs explicit.  
+Across 35,785 simulated negotiations,
+OpenAI models (o3-mini, GPT-4o) achieve strong performance of
+minimal MENE regret, top-quartile Nash and utilitarian welfare, and high EF1 fairness—and they account for nearly all support in the maximum-entropy Nash equilibrium—while remaining resilient to the adversarial \textsc{Tough} strategy.  
+By contrast, Gemini and Claude are seemingly more exploitable.
+
+
+
+% Acknowledgements should only appear in the accepted version.
+% \section*{Acknowledgments}
+
+% \textbf{Do not} include acknowledgements in the initial version of
+% the paper submitted for blind review.
+
+% If a paper is accepted, the final camera-ready version can (and
+% usually should) include acknowledgements.  Such acknowledgements
+% should be placed at the end of the section, in an unnumbered section
+% that does not count towards the paper page limit. Typically, this will 
+% include thanks to reviewers who gave useful comments, to colleagues 
+% who contributed to the ideas, and to funding agencies and corporate 
+% sponsors that provided financial support.
+
+\clearpage
+\section*{Impact Statement}
+
+There are many potential implications
+of our work, regarding the application of LLMs for real-world negotiation.  
+In particular, we note that our results for the hand-crafted \textsc{Tough} agent demonstrates that seemingly competent LLMs can be induced to accept highly unfavorable deals through targeted strategies.  
+
+
+
+
+% In the unusual situation where you want a paper to appear in the
+% references without citing it in the main text, use \nocite
+%\nocite{langley00}
+
+\bibliography{icml_2025_workshop/main}
+\bibliographystyle{icml2025}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{appendix}
+
+\end{document}
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was created
+% by Iain Murray in 2018, and modified by Alexandre Bouchard in
+% 2019 and 2021 and by Csaba Szepesvari, Gang Niu and Sivan Sabato in 2022.
+% Modified again in 2023 and 2024 by Sivan Sabato and Jonathan Scarlett.
+% Previous contributors include Dan Roy, Lise Getoor and Tobias
+% Scheffer, which was slightly modified from the 2010 version by
+% Thorsten Joachims & Johannes Fuernkranz, slightly modified from the
+% 2009 version by Kiri Wagstaff and Sam Roweis's 2008 version, which is
+% slightly modified from Prasad Tadepalli's 2007 version which is a
+% lightly changed version of the previous year's version by Andrew
+% Moore, which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.
+
