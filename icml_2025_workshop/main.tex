@@ -194,9 +194,9 @@ Introducing a heuristic rigid bargaining strategy exposes systematic vulnerabili
 %\item \textbf{Benchmark.} A fully-instrumented bargaining suite with bootstrap statistics for max-entropy Nash equilibrium regret, Nash/utilitarian welfare, and EF1 fairness under our extended rules. The benchmark suite will be released under the MIT License \footnote{\url{https://github.com/dipplestix/caif_negotiation/tree/gabe-working-branch}}.
 \section{Introduction}
 
-Large language models (LLMs) are typically evaluated with respect to static benchmarks, where performance can be measured in terms of quality of response to given inputs. 
+Large language models (LLMs) are typically evaluated with respect to static benchmarks, where performance can be measured in terms of quality of response to given inputs.
 For domains with multiple interacting LLM agents, performance inherently depends on the behavior of other agents in the environment.
-The evaluation approach, therefore, must carefully determine consider its assumptions about other-agent context and consider the sensitivity of results to these strategic assumptions.
+The evaluation approach, therefore, must carefully consider its assumptions about the other-agent context and examine the sensitivity of results to these strategic assumptions.
 
 We undertake an evaluation of LLM agents for a particular strategic domain: sequential bargaining to allocate a set of items. 
 Negotiation provides an appealing challenge problem for multiagent evaluation---a canonical scenario with plausible real-world application, where agents pursue self-interest but can succeed only by finding deals of mutual benefit.
@@ -217,7 +217,7 @@ Our version includes two key elements:
 \begin{enumerate}
 \item A \term{discount factor}, systematically reducing payoffs over negotiation rounds to incentivize rapid agreement.
 \item An explicit \term{outside option}, allowing agents to opt out of negotiations and receive some value.
-This requires agents to assess whether a mutually beneficial is feasible to obtain.
+This requires agents to assess whether a mutually beneficial deal is feasible.
 \end{enumerate}
 Without discounting or outside options, short-horizon negotiation can degenerate into an ultimatum game.
 
@@ -238,7 +238,7 @@ In addition to formulating the bargaining game benchmark, this work contributes 
 % \item \textbf{Updated bargaining framework.} We extend the \citet{Lewis17} bargaining scenario, incorporating discounting and outside options, along with bootstrap-derived statistics capturing max-entropy Nash equilibrium regret, Nash and utilitarian welfare, and fairness measures (EF1).
 \item \textbf{Empirical meta-game evaluation.}
 We systematically collect results from head-to-head bargaining between agents derived from five proprietary LLMs, reinforcement learning (RL), and heuristic strategies. 
-From this data we estimate an empirical meta-game model that drives the analysis.
+From these data we estimate an empirical meta-game model that drives the analysis.
 \item \textbf{Prompting hierarchy framework.} We present a structured, seven-level incremental prompting framework to systematically analyze how varying degrees of strategic guidance influence LLM negotiation strategies and effectiveness.
 \item \textbf{Multi-criteria quantitative and qualitative assessment.} 
 We employ diverse metrics that bear on the individual and joint performances as well as strategic relationships among negotiation agents.
@@ -246,7 +246,7 @@ We include individual utility as well as social welfare and fairness indicators,
 % game-theoretic regret-based analysis that gauges the agents' strategic competence with metrics from the literature on the fair and efficient allocation of indivisible items that shed light on emergent cooperation. We also qualitatively analyzed the actions of LLMs and their reported reasoning to uncover interesting (sometimes pathological) behavioral patterns. 
 We find a consistent positive correlation among these metrics across bargaining setups.  
 \item \textbf{Robustness analysis.} 
-We characterize uncertainty in our measurements through statistical bootstrapping, and further probe vulnerabilities to targeted exploitive strategy.
+We characterize uncertainty in our measurements through statistical bootstrapping, and further probe vulnerabilities to targeted exploitative strategies.
 In particular, we identify vulnerabilities in certain LLM agents to exploitation by an extremely rigid heuristic bargaining strategy.
 % (\textsc{Tough}), (notably Gemini and Claude Sonnet) that remain hidden in standard LLM-only evaluations.
 \end{enumerate}

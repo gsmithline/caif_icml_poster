@@ -83,10 +83,13 @@ Poster Session \hfill
 \begin{column}{\colwidth}
 
   \begin{block}{Motivation}
-  Performance of LLM agents in multiagent tasks depends critically on the
-  strategic context. Sequential bargaining provides a mixed-motive environment
-  to assess cooperation and competition with clear welfare and fairness metrics.
-  We seek insight into how prompting and simple heuristics influence outcomes.
+  \begin{itemize}
+    \item Performance of an LLM agent hinges on the behavior of its counterpart.
+    \item Sequential bargaining offers a mixed-motive testbed with measurable
+          welfare and fairness.
+    \item We study how prompting and simple heuristics shape negotiation
+          outcomes.
+  \end{itemize}
   \end{block}
 
   \begin{block}{Background}
@@ -96,6 +99,15 @@ Poster Session \hfill
   ($\gamma=0.98,R=3$), and BG3 ($\gamma=0.98,R=5$). From 1,000 bootstrap
   resamples per game we compute a maximum-entropy Nash equilibrium (MENE) to
   benchmark regret, welfare, and EF1 fairness.
+  \end{block}
+
+  \begin{block}{Key Contributions}
+  \begin{itemize}
+    \item Empirical meta-game built from 35k+ simulated bargaining games.
+    \item Seven-level prompting hierarchy reveals how guidance shapes strategy.
+    \item Multi-criteria analysis connects regret, welfare, and fairness.
+    \item Robustness checks expose vulnerabilities to rigid heuristics.
+  \end{itemize}
   \end{block}
 
   \begin{block}{Experimental Setup}
